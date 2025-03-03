@@ -6,7 +6,9 @@ from pathlib import Path
 from kaggle.api.kaggle_api_extended import KaggleApi
 import joblib
 
+
 def preprocess_data():
+
     api = KaggleApi()
     api.authenticate()
 
@@ -25,7 +27,6 @@ def preprocess_data():
     os.remove(zip_path)
 
     df_train = pd.read_csv(download_folder / "train.csv")
-    df_ids = df_train.pop("PassengerId")
 
     df_train = df_train.drop(columns=["Ticket"])
     df_train["Title"] = df_train["Name"].apply(extract_title)
@@ -53,12 +54,15 @@ def preprocess_data():
     # Save preprocessed data
     joblib.dump((X_train, y_train, categorical_indices), download_folder / "preprocessed_data.pkl")
 
+
 def extract_title(name):
     match = re.search(r',\s*([\w\s]+)\.', name)
     return match.group(1) if match else None
 
+
 def main():
     preprocess_data()
+
 
 if __name__ == "__main__":
     main()

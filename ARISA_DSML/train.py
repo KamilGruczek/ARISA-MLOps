@@ -4,6 +4,7 @@ from sklearn.model_selection import train_test_split
 from catboost import CatBoostClassifier, Pool, cv
 from pathlib import Path
 
+
 def train_model():
     # Load preprocessed data
     download_folder = Path("data/titanic")
@@ -29,10 +30,10 @@ def train_model():
             model = CatBoostClassifier(**params, verbose=0)
             model.fit(X_train_opt, y_train_opt, eval_set=(X_val_opt, y_val_opt), cat_features=categorical_indices, early_stopping_rounds=50)
             return model.get_best_score()["validation"]["Logloss"]
-    
+
         study = optuna.create_study(direction="minimize")
         study.optimize(objective, n_trials=50)
-    
+
         joblib.dump(study.best_params, best_params_path)
         params = study.best_params
     else:
@@ -50,30 +51,32 @@ def train_model():
     data = Pool(X_train, y_train, cat_features=categorical_indices)
 
     cv_results = cv(
-    params=params,
-    pool=data,
-    fold_count=5,
-    partition_random_seed=42,
-    shuffle=True,
+        params=params,
+        pool=data,
+        fold_count=5,
+        partition_random_seed=42,
+        shuffle=True,
     )
 
     cv_results.to_csv(outfolder / "cv_results_v2.csv", index=False)
 
     model.fit(
-    X_train,
-    y_train,
-    verbose_eval=50,
-    early_stopping_rounds=50,
-    cat_features=categorical_indices,
-    use_best_model=False,
-    plot=True
+        X_train,
+        y_train,
+        verbose_eval=50,
+        early_stopping_rounds=50,
+        cat_features=categorical_indices,
+        use_best_model=False,
+        plot=True
     )
 
     model.save_model(outfolder / 'catboost_model_titanic_v2.cbm')
     joblib.dump(params, outfolder / 'model_params_v2.pkl')
 
+
 def main():
     train_model()
+
 
 if __name__ == "__main__":
     main()

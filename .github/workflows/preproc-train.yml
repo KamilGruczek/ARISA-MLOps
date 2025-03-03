@@ -28,7 +28,9 @@ jobs:
           chmod 600 $HOME/.config/kaggle/kaggle.json
       - name: Run preprocessing
         run: make preprocess
-
+        env: 
+          KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
       - name: Upload preprocessed data
         uses: actions/upload-artifact@v4
         with:

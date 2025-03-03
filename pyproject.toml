@@ -5,9 +5,9 @@ build-backend = "flit_core.buildapi"
 [project]
 name = "ARISA_DSML"
 version = "0.0.1"
-description = "Trying to predict titanic passenger survival"
+description = ""
 authors = [
-  { name = "Cagerskov" },
+  { name = "Kamil Gruczek" },
 ]
 
 readme = "README.md"
